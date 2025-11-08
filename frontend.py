@@ -29,7 +29,7 @@ def hide_all_buttons():
     edit_button.place_forget()
     delete_button.place_forget()
     view_button.place_forget()
-    back_button.place(x=600, y=20)
+    back_button.place(x=650, y=20)
 
 def show_add_screen():
     hide_all_buttons()
@@ -59,7 +59,7 @@ def show_add_screen():
     entry = tk.Entry(window, textvariable=entry_var, width=6, font=("Helvetica", 9))
     entry.place(x=350, y=200)
 
-    # Execute
+    # Execute button
     confirm_button = tk.Button(window, text="ADD", font=("Helvetica", 14, "bold"), width=8, bg="#588157", fg="white", cursor='hand2')
     confirm_button.place(x=300, y=300)
 
@@ -90,7 +90,7 @@ def show_edit_screen():
     entry = tk.Entry(window, textvariable=entry_var, width=6, font=("Helvetica", 9))
     entry.place(x=350, y=200)
 
-    save_button = tk.Button(window, text="SAVE", font=("Helvetica", 14, "bold"), bg="#00b4d8", fg="white", cursor='hand2')
+    save_button = tk.Button(window, text="SAVE", font=("Helvetica", 14, "bold"), bg="#0077b6", fg="white", cursor='hand2')
     save_button.place(x=300, y=300)
 
 def show_delete_screen():
@@ -120,6 +120,26 @@ def show_delete_screen():
 def show_view_screen():
     hide_all_buttons()
 
+    label = tk.Label(window, text="Country Code", font=("Helvetica", 9, "bold"))
+    label.place(x=215, y=120)
+    entry_var = tk.StringVar()
+    entry = tk.Entry(window, textvariable=entry_var, width=5, font=("Helvetica", 9))
+    entry.place(x=310, y=120)
+
+    label = tk.Label(window, text="OR", font=("Helvetica", 9, "bold"))
+    label.place(x=315, y=160)
+
+    label = tk.Label(window, text="Country Name", font=("Helvetica", 9, "bold"))
+    label.place(x=215, y=200)
+    entry_var = tk.StringVar()
+    entry = tk.Entry(window, textvariable=entry_var, width=20, font=("Helvetica", 9))
+    entry.place(x=310, y=200)    
+
+
+    search_button = tk.Button(window, text="SEARCH", font=("Helvetica", 14, "bold"), cursor='hand2')
+    search_button.place(x=300, y=300)
+
+
 def back_button_event():
     for i in window.winfo_children():
         if i is bg_label:
@@ -140,7 +160,6 @@ delete_button = tk.Button(window, text="DELETE", command=show_delete_screen, wid
 delete_button.place(x=150, y=190)
 view_button = tk.Button(window, text="VIEW", command=show_view_screen, width=10, height=2, font=font_large, cursor='hand2')
 view_button.place(x=400, y=190)
-back_button = tk.Button(window, text="BACK", command=back_button_event, font=font_large, cursor='hand2')
+back_button = tk.Button(window, text="BACK", command=back_button_event, height=1, cursor='hand2')
 
 window.mainloop()
-
