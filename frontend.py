@@ -36,16 +36,37 @@ def show_add_screen():
     add_content = True
     # Create query
     if add_content:
-        label = tk.Label(window, text="Enter SQL Query:", font=("Helvetica", 14, "bold"))
-        label.place(x=275, y=50)
+        label = tk.Label(window, text="Country Code", font=("Helvetica", 9, "bold"))
+        label.place(x=235, y=80)
 
         entry_var = tk.StringVar()
-        entry = tk.Entry(window, textvariable=entry_var, width=50, font=("Helvetica", 12))
-        entry.place(x=50, y=140)
+        entry = tk.Entry(window, textvariable=entry_var, width=5, font=("Helvetica", 9))
+        entry.place(x=350, y=80)
+
+        label = tk.Label(window, text="Country Name", font=("Helvetica", 9, "bold"))
+        label.place(x=235, y=120)
+
+        entry_var = tk.StringVar()
+        entry = tk.Entry(window, textvariable=entry_var, width=20, font=("Helvetica", 9))
+        entry.place(x=350, y=120)
+
+        label = tk.Label(window, text="Number of people", font=("Helvetica", 9, "bold"))
+        label.place(x=235, y=160)
+
+        entry_var = tk.StringVar()
+        entry = tk.Entry(window, textvariable=entry_var, width=12, font=("Helvetica", 9))
+        entry.place(x=350, y=160)
+
+        label = tk.Label(window, text="Year", font=("Helvetica", 9, "bold"))
+        label.place(x=235, y=200)
+
+        entry_var = tk.StringVar()
+        entry = tk.Entry(window, textvariable=entry_var, width=6, font=("Helvetica", 9))
+        entry.place(x=350, y=200)
 
     # Execute
     confirm_button = tk.Button(window, text="ADD", font=("Helvetica", 14, "bold"), bg="#588157", fg="white", cursor='hand2')
-    confirm_button.place(x=300, y=200)
+    confirm_button.place(x=300, y=300)
 
 def show_edit_screen():
     hide_all_buttons()
