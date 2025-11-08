@@ -44,7 +44,7 @@ def show_add_screen():
         entry.place(x=50, y=140)
 
     # Execute
-    confirm_button = tk.Button(window, text="ADD", font=("Helvetica", 14, "bold"), bg="#588157", fg="white")
+    confirm_button = tk.Button(window, text="ADD", font=("Helvetica", 14, "bold"), bg="#588157", fg="white", cursor='hand2')
     confirm_button.place(x=300, y=200)
 
 def show_edit_screen():
@@ -57,12 +57,15 @@ def show_view_screen():
     hide_all_buttons()
 
 def back_button_event():
+    for i in window.winfo_children():
+        if i is bg_label:
+            continue
+        i.place_forget()
     add_button.place(x=150, y=100)
     edit_button.place(x=400, y=100)
     delete_button.place(x=150, y=190)
     view_button.place(x=400, y=190)
-    back_button.place_forget()
-
+    
 #  Define buttons
 add_button = tk.Button(window, text="ADD", width=10, height=2, font=font_large, command=show_add_screen, bg="#588157", cursor='hand2')
 add_button.place(x=150, y=100)
