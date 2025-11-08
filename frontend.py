@@ -33,46 +33,89 @@ def hide_all_buttons():
 
 def show_add_screen():
     hide_all_buttons()
-    add_content = True
-    # Create query
-    if add_content:
-        label = tk.Label(window, text="Country Code", font=("Helvetica", 9, "bold"))
-        label.place(x=235, y=80)
+    
+    # Add query
+    label = tk.Label(window, text="Country Code", font=("Helvetica", 9, "bold"))
+    label.place(x=235, y=80)
+    entry_var = tk.StringVar()
+    entry = tk.Entry(window, textvariable=entry_var, width=5, font=("Helvetica", 9))
+    entry.place(x=350, y=80)
 
-        entry_var = tk.StringVar()
-        entry = tk.Entry(window, textvariable=entry_var, width=5, font=("Helvetica", 9))
-        entry.place(x=350, y=80)
+    label = tk.Label(window, text="Country Name", font=("Helvetica", 9, "bold"))
+    label.place(x=235, y=120)
+    entry_var = tk.StringVar()
+    entry = tk.Entry(window, textvariable=entry_var, width=20, font=("Helvetica", 9))
+    entry.place(x=350, y=120)
 
-        label = tk.Label(window, text="Country Name", font=("Helvetica", 9, "bold"))
-        label.place(x=235, y=120)
+    label = tk.Label(window, text="Number of people", font=("Helvetica", 9, "bold"))
+    label.place(x=235, y=160)
+    entry_var = tk.StringVar()
+    entry = tk.Entry(window, textvariable=entry_var, width=12, font=("Helvetica", 9))
+    entry.place(x=350, y=160)
 
-        entry_var = tk.StringVar()
-        entry = tk.Entry(window, textvariable=entry_var, width=20, font=("Helvetica", 9))
-        entry.place(x=350, y=120)
-
-        label = tk.Label(window, text="Number of people", font=("Helvetica", 9, "bold"))
-        label.place(x=235, y=160)
-
-        entry_var = tk.StringVar()
-        entry = tk.Entry(window, textvariable=entry_var, width=12, font=("Helvetica", 9))
-        entry.place(x=350, y=160)
-
-        label = tk.Label(window, text="Year", font=("Helvetica", 9, "bold"))
-        label.place(x=235, y=200)
-
-        entry_var = tk.StringVar()
-        entry = tk.Entry(window, textvariable=entry_var, width=6, font=("Helvetica", 9))
-        entry.place(x=350, y=200)
+    label = tk.Label(window, text="Year", font=("Helvetica", 9, "bold"))
+    label.place(x=235, y=200)
+    entry_var = tk.StringVar()
+    entry = tk.Entry(window, textvariable=entry_var, width=6, font=("Helvetica", 9))
+    entry.place(x=350, y=200)
 
     # Execute
-    confirm_button = tk.Button(window, text="ADD", font=("Helvetica", 14, "bold"), bg="#588157", fg="white", cursor='hand2')
+    confirm_button = tk.Button(window, text="ADD", font=("Helvetica", 14, "bold"), width=8, bg="#588157", fg="white", cursor='hand2')
     confirm_button.place(x=300, y=300)
 
 def show_edit_screen():
     hide_all_buttons()
 
+    label = tk.Label(window, text="Country Code", font=("Helvetica", 9, "bold"))
+    label.place(x=235, y=80)
+    entry_var = tk.StringVar()
+    entry = tk.Entry(window, textvariable=entry_var, width=5, font=("Helvetica", 9))
+    entry.place(x=350, y=80)
+
+    label = tk.Label(window, text="Country Name", font=("Helvetica", 9, "bold"))
+    label.place(x=235, y=120)
+    entry_var = tk.StringVar()
+    entry = tk.Entry(window, textvariable=entry_var, width=20, font=("Helvetica", 9))
+    entry.place(x=350, y=120)
+
+    label = tk.Label(window, text="Number of people", font=("Helvetica", 9, "bold"))
+    label.place(x=235, y=160)
+    entry_var = tk.StringVar()
+    entry = tk.Entry(window, textvariable=entry_var, width=12, font=("Helvetica", 9))
+    entry.place(x=350, y=160)
+
+    label = tk.Label(window, text="Year", font=("Helvetica", 9, "bold"))
+    label.place(x=235, y=200)
+    entry_var = tk.StringVar()
+    entry = tk.Entry(window, textvariable=entry_var, width=6, font=("Helvetica", 9))
+    entry.place(x=350, y=200)
+
+    save_button = tk.Button(window, text="SAVE", font=("Helvetica", 14, "bold"), bg="#00b4d8", fg="white", cursor='hand2')
+    save_button.place(x=300, y=300)
+
 def show_delete_screen():
     hide_all_buttons()
+
+    label = tk.Label(window, text="Country Code", font=("Helvetica", 9, "bold"))
+    label.place(x=235, y=120)
+    entry_var = tk.StringVar()
+    entry = tk.Entry(window, textvariable=entry_var, width=5, font=("Helvetica", 9))
+    entry.place(x=350, y=120)
+
+    label = tk.Label(window, text="Country Name", font=("Helvetica", 9, "bold"))
+    label.place(x=235, y=160)
+    entry_var = tk.StringVar()
+    entry = tk.Entry(window, textvariable=entry_var, width=20, font=("Helvetica", 9))
+    entry.place(x=350, y=160)
+
+    label = tk.Label(window, text="Year", font=("Helvetica", 9, "bold"))
+    label.place(x=235, y=200)
+    entry_var = tk.StringVar()
+    entry = tk.Entry(window, textvariable=entry_var, width=6, font=("Helvetica", 9))
+    entry.place(x=350, y=200)
+
+    del_button = tk.Button(window, text="DELETE", font=("Helvetica", 14, "bold"), bg="#c1121f", fg="white", cursor='hand2')
+    del_button.place(x=300, y=300)
 
 def show_view_screen():
     hide_all_buttons()
