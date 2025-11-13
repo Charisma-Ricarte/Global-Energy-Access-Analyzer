@@ -1,186 +1,167 @@
+# frontend.py
 import customtkinter as ctk
-from PIL import Image
+from tkinter import messagebox
+import backend
 
-# set up window size, position
-window_width = 700
-window_height = 400
-window = ctk.CTk()
-window.title("Electricity Database Management")
-screen_width = window.winfo_screenwidth()
-screen_height = window.winfo_screenheight()
-x = int((screen_width / 2) - (window_width / 2))
-y = int((screen_height / 2) - (window_height / 2))
-window.geometry(f'{window_width}x{window_height}+{x}+{y}')
-window.resizable(False, False)
-window.iconbitmap("icon.ico")
-
-# background image
-bg_image = ctk.CTkImage(dark_image=Image.open("background.png"), size=(700, 400))
-bg_label = ctk.CTkLabel(window, image=bg_image, text="")
-bg_label.place(x=0, y=0, relwidth=1, relheight=1)
-bg_label.lower()
 ctk.set_appearance_mode("dark")
-window.configure(fg_color="#000000")
 
-def hide_all_buttons():
-    clear_screen(exceptions=[bg_label])
-    back_button.place(x=600, y=15)
+window = ctk.CTk()
+window.title("Global Electricity Access Analyzer")
+window.geometry("800x500")
 
-# clear everything in the window except background
-def clear_screen(exceptions=()):
-    for w in window.winfo_children():
-        if w in exceptions:
-            continue
-        w.place_forget()
+# ----------------------------------------------------------
+# Helpers
+# ----------------------------------------------------------
 
-# define button event
+def clear_screen():
+    for widget in window.winfo_children():
+        widget.place_forget()
 
-def back_button_event():
-    clear_screen(exceptions=[bg_label])
-    add_button.place(x=150, y=100)
-    edit_button.place(x=400, y=100)
-    delete_button.place(x=150, y=190)
-    view_button.place(x=400, y=190)
-    back_button.place_forget()
+def back_to_menu():
+    clear_screen()
+    build_menu()
 
-def confirm_btn():
-    code = country_code.get()
-    name = country_name.get()
-    ppl = people.get()
-    yr = year.get()
-    if not (code and name and ppl and yr):
-        status_label.place(x=270, y=350)
-        status_label.configure(text="Please fill all information", text_color='#e63946')
-    else:
-        status_label.place(x=320, y=350)
-        status_label.configure(text="Successful!", text_color="#6a994e")
+# ----------------------------------------------------------
+# ADD RECORD SCREEN
+# ----------------------------------------------------------
 
-def show_add_screen():
-    hide_all_buttons()
-    global country_code, country_name, year, people, status_label
+def add_screen():
+    clear_screen()
 
-    country_c = ctk.CTkLabel(window, text="Country Code", font=("Helvetica", 14, "bold"))
-    country_c.place(x=215, y=80)
-    country_code = ctk.CTkEntry(window, width=60, fg_color= '#e5e5e5', text_color="#000000")
-    country_code.place(x=350, y=80)
+    ctk.CTkLabel(window, text="Add Electricity Record", font=("Helvetica", 20)).place(x=260, y=40)
 
-    country_n = ctk.CTkLabel(window, text="Country Name", font=("Helvetica", 14, "bold"))
-    country_n.place(x=215, y=120)
-    country_name = ctk.CTkEntry(window, width=180, fg_color= '#e5e5e5', text_color="#000000")
-    country_name.place(x=350, y=120)
+    # Inputs
+    country_id = ctk.CTkEntry(window, width=120)
+    year = ctk.CTkEntry(window, width=120)
+    pwe = ctk.CTkEntry(window, width=120)
 
-    n_people = ctk.CTkLabel(window, text="Number of People", font=("Helvetica", 14, "bold"))
-    n_people.place(x=215, y=160)
-    people = ctk.CTkEntry(window, width=120, fg_color= '#e5e5e5', text_color="#000000")
-    people.place(x=350, y=160)
+    ctk.CTkLabel(window, text="Country ID").place(x=250, y=120)
+    country_id.place(x=380, y=120)
 
-    yr = ctk.CTkLabel(window, text="Year", font=("Helvetica", 14, "bold"))
-    yr.place(x=215, y=200)
-    year = ctk.CTkEntry(window, width=80, fg_color= '#e5e5e5', text_color="#000000")
-    year.place(x=350, y=200)
+    ctk.CTkLabel(window, text="Year").place(x=250, y=160)
+    year.place(x=380, y=160)
 
-    status_label = ctk.CTkLabel(window, text="", font=("Helvetica", 14, "bold"))
-    
-    add_confirm = ctk.CTkButton(window, text="ADD", font=("Helvetica", 14, "bold"), width=120, height=40, fg_color="#588157", hover_color="#436644", cursor="hand2", command=confirm_btn)
-    add_confirm.place(x=300, y=300)
+    ctk.CTkLabel(window, text="People Without Electricity").place(x=250, y=200)
+    pwe.place(x=380, y=200)
 
-def show_edit_screen():
-    hide_all_buttons()
-    global country_code, country_name, year, people, status_label
+    def submit():
+        try:
+            backend.add_electricity_record(
+                int(country_id.get()),
+                int(year.get()),
+                int(pwe.get())
+            )
+            messagebox.showinfo("Success", "Record added!")
+        except Exception as e:
+            messagebox.showerror("Error", str(e))
 
-    country_c = ctk.CTkLabel(window, text="Country Code", font=("Helvetica", 14, "bold"))
-    country_c.place(x=215, y=80)
-    country_code = ctk.CTkEntry(window, width=60, fg_color= '#e5e5e5', text_color="#000000")
-    country_code.place(x=350, y=80)
+    ctk.CTkButton(window, text="Submit", command=submit).place(x=330, y=260)
+    ctk.CTkButton(window, text="Back", command=back_to_menu).place(x=330, y=300)
 
-    country_n = ctk.CTkLabel(window, text="Country Name", font=("Helvetica", 14, "bold"))
-    country_n.place(x=215, y=120)
-    country_name = ctk.CTkEntry(window, width=180, fg_color= '#e5e5e5', text_color="#000000")
-    country_name.place(x=350, y=120)
+# ----------------------------------------------------------
+# VIEW RECORDS SCREEN
+# ----------------------------------------------------------
 
-    n_ppl = ctk.CTkLabel(window, text="Number of People", font=("Helvetica", 14, "bold"))
-    n_ppl.place(x=215, y=160)
-    people = ctk.CTkEntry(window, width=120, fg_color= '#e5e5e5', text_color="#000000")
-    people.place(x=350, y=160)
+def view_screen():
+    clear_screen()
 
-    yr = ctk.CTkLabel(window, text="Year", font=("Helvetica", 14, "bold"))
-    yr.place(x=215, y=200)
-    year = ctk.CTkEntry(window, width=80, fg_color= '#e5e5e5', text_color="#000000")
-    year.place(x=350, y=200)
+    ctk.CTkLabel(window, text="All Records", font=("Helvetica", 20)).place(x=320, y=30)
 
-    status_label = ctk.CTkLabel(window, text="", font=("Helvetica", 14, "bold"))
-    
-    save_btn = ctk.CTkButton(window, text="SAVE", font=("Helvetica", 14, "bold"), width=120, height=40, fg_color="#0077b6", hover_color="#025b87", cursor="hand2", command=confirm_btn)
-    save_btn.place(x=300, y=300)
+    records = backend.get_electricity_records()
 
-def show_view_screen():
-    hide_all_buttons()
-    global country_code, country_name, year, people, status_label
+    text = ctk.CTkTextbox(window, width=700, height=350)
+    text.place(x=50, y=80)
 
-    country_c = ctk.CTkLabel(window, text="Country Code", font=("Helvetica", 14, "bold"))
-    country_c.place(x=215, y=120)
-    country_c2 = ctk.CTkEntry(window, width=60, fg_color= '#e5e5e5', text_color="#000000")
-    country_c2.place(x=320, y=120)
+    for r in records:
+        text.insert("end", str(r) + "\n")
 
-    label = ctk.CTkLabel(window, text="OR", font=("Helvetica", 14, "bold"))
-    label.place(x=330, y=160)
+    ctk.CTkButton(window, text="Back", command=back_to_menu).place(x=350, y=450)
 
-    country_n = ctk.CTkLabel(window, text="Country Name", font=("Helvetica", 14, "bold"))
-    country_n.place(x=215, y=200)
-    country_n2 = ctk.CTkEntry(window, width=180, fg_color= '#e5e5e5', text_color="#000000")
-    country_n2.place(x=320, y=200)
+# ----------------------------------------------------------
+# DELETE SCREEN
+# ----------------------------------------------------------
 
-    search_btn = ctk.CTkButton(window, text="SEARCH", font=("Helvetica", 14, "bold"), width=120, height=40, fg_color="#778da9", hover_color="#415a77", cursor="hand2")
-    search_btn.place(x=300, y=300)
+def delete_screen():
+    clear_screen()
 
-def show_delete_screen():
-    global country_code, country_name, year, status_label
-    hide_all_buttons()
+    ctk.CTkLabel(window, text="Delete Record", font=("Helvetica", 20)).place(x=300, y=40)
 
-    country_c = ctk.CTkLabel(window, text="Country Code", font=("Helvetica", 14, "bold"))
-    country_c.place(x=235, y=120)
-    country_code = ctk.CTkEntry(window, width=60, fg_color= '#e5e5e5', text_color="#000000")
-    country_code.place(x=350, y=120)
+    rec_id = ctk.CTkEntry(window, width=120)
+    ctk.CTkLabel(window, text="Record ID").place(x=270, y=150)
+    rec_id.place(x=360, y=150)
 
-    country_n = ctk.CTkLabel(window, text="Country Name", font=("Helvetica", 14, "bold"))
-    country_n.place(x=235, y=160)
-    country_name = ctk.CTkEntry(window, width=180, fg_color= '#e5e5e5', text_color="#000000")
-    country_name.place(x=350, y=160)
+    def delete():
+        try:
+            backend.delete_electricity_record(int(rec_id.get()))
+            messagebox.showinfo("Success", "Record Deleted")
+        except Exception as e:
+            messagebox.showerror("Error", str(e))
 
-    yr = ctk.CTkLabel(window, text="Year", font=("Helvetica", 14, "bold"))
-    yr.place(x=235, y=200)
-    year = ctk.CTkEntry(window, width=80, fg_color= '#e5e5e5', text_color="#000000")
-    year.place(x=350, y=200)
+    ctk.CTkButton(window, text="Delete", command=delete).place(x=350, y=220)
+    ctk.CTkButton(window, text="Back", command=back_to_menu).place(x=350, y=260)
 
-    status_label = ctk.CTkLabel(window, text="", font=("Helvetica", 14, "bold"))
+# ----------------------------------------------------------
+# ANALYTICAL QUERY SCREEN
+# ----------------------------------------------------------
 
-    del_btn = ctk.CTkButton(window, text="DELETE", font=("Helvetica", 14, "bold"), width=120, height=40, fg_color="#c1121f", hover_color="#960d17", cursor="hand2", command=delete_btn)
-    del_btn.place(x=300, y=300)
+def query_screen():
+    clear_screen()
 
-def delete_btn():
-    code = country_code.get()
-    name = country_name.get()
-    yr = year.get()
-    if not (code and name and yr):
-        status_label.place(x=270, y=350)
-        status_label.configure(text="Please fill all information", text_color='#e63946')
-    else:
-        status_label.place(x=320, y=350)
-        status_label.configure(text="Successful!", text_color="#6a994e")
+    ctk.CTkLabel(window, text="Analytical Queries", font=("Helvetica", 20)).place(x=290, y=40)
 
-# define buttons
-add_button = ctk.CTkButton(window, text="ADD", width=140, height=50, font=("Helvetica", 16, "bold"), fg_color="#588157",hover_color="#436644", cursor="hand2", command=show_add_screen)
-add_button.place(x=150, y=100)
+    def show_result(data, title):
+        result = ctk.CTkTextbox(window, width=700, height=300)
+        result.place(x=50, y=180)
+        result.insert("end", title + "\n\n")
+        for row in data:
+            result.insert("end", str(row) + "\n")
 
-edit_button = ctk.CTkButton(window, text="EDIT", width=140, height=50, font=("Helvetica", 16, "bold"), fg_color="#fca311", hover_color="#c2a800", cursor="hand2", command=show_edit_screen)
-edit_button.place(x=400, y=100)
+    # Query: High Unserved
+    def q1():
+        data = backend.query_high_unserved(10000000)
+        show_result(data, "Countries w/ >10M Unserved")
 
-delete_button = ctk.CTkButton(window, text="DELETE", width=140, height=50, font=("Helvetica", 16, "bold"), fg_color="#c1121f", hover_color="#960d17", cursor="hand2", command=show_delete_screen)
-delete_button.place(x=150, y=190)
+    # Query: Trend
+    def q2():
+        data = backend.query_yearly_trend()
+        show_result(data, "Yearly Global Electricity Trend")
 
-view_button = ctk.CTkButton(window, text="VIEW", width=140, height=50, font=("Helvetica", 16, "bold"), fg_color="#778da9", hover_color="#415a77", cursor="hand2", command=show_view_screen)
-view_button.place(x=400, y=190)
+    # Query: Access Percent
+    def q3():
+        data = backend.query_access_percent(2015)
+        show_result(data, "Access Percent (2015)")
 
-back_button = ctk.CTkButton(window, text="BACK", font=("Helvetica", 14, "bold"), width=80, height=30, fg_color="#adb5bd", hover_color="#6c757d", cursor="hand2", command=back_button_event)
+    # Query: Regional Comparison
+    def q4():
+        data = backend.query_regional_comparison(2015)
+        show_result(data, "Regional Comparison (2015)")
 
+    # Query: Most Improved
+    def q5():
+        data = backend.query_most_improved()
+        show_result(data, "Most Improved Countries")
+
+    # Buttons
+    ctk.CTkButton(window, text="High Unserved", command=q1).place(x=150, y=120)
+    ctk.CTkButton(window, text="Trend", command=q2).place(x=350, y=120)
+    ctk.CTkButton(window, text="Access %", command=q3).place(x=550, y=120)
+
+    ctk.CTkButton(window, text="Regional Compare", command=q4).place(x=250, y=160)
+    ctk.CTkButton(window, text="Most Improved", command=q5).place(x=450, y=160)
+
+    ctk.CTkButton(window, text="Back", command=back_to_menu).place(x=350, y=500)
+
+# ----------------------------------------------------------
+# MAIN MENU
+# ----------------------------------------------------------
+
+def build_menu():
+    ctk.CTkLabel(window, text="Electricity Database Manager", font=("Helvetica", 24)).place(x=240, y=50)
+
+    ctk.CTkButton(window, text="Add Record", width=200, command=add_screen).place(x=100, y=200)
+    ctk.CTkButton(window, text="View Records", width=200, command=view_screen).place(x=300, y=200)
+    ctk.CTkButton(window, text="Delete Record", width=200, command=delete_screen).place(x=500, y=200)
+    ctk.CTkButton(window, text="Run Queries", width=200, command=query_screen).place(x=300, y=260)
+
+build_menu()
 window.mainloop()
