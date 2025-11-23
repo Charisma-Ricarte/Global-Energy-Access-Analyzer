@@ -1,5 +1,4 @@
-vscode
-# data_loader.py
+vscode# data_loader.py
 # - Reads population_dataset.csv (Kaggle wide format)
 # - Reads electricity_dataset.csv (Entity, Code, Year, <people without column>)
 # - Loads population only for years 1990..2016 (matching electricity data)
@@ -368,3 +367,4 @@ def load_data():
 
 if __name__ == "__main__":
     load_data()
+
