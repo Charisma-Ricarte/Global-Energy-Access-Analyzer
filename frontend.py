@@ -12,11 +12,16 @@ import backend
 
 # Appearance
 ctk.set_appearance_mode("dark")
-WINDOW_W, WINDOW_H = 1150, 700
+window_width = 1000
+window_height = 500
 
 window = ctk.CTk()
 window.title("Global Electricity Access Analyzer")
-window.geometry(f"{WINDOW_W}x{WINDOW_H}")
+screen_width = window.winfo_screenwidth()
+screen_height = window.winfo_screenheight()
+x = int((screen_width / 2) - (window_width / 2))
+y = int((screen_height / 2) - (window_height / 2))
+window.geometry(f'{window_width}x{window_height}+{x}+{y}')
 
 # Sidebar + main frame
 sidebar = ctk.CTkFrame(window, width=220, fg_color="#0b0b0b")
@@ -148,33 +153,58 @@ def screen_view():
 
 def screen_add():
     safe_clear(main_frame)
-    ctk.CTkLabel(main_frame, text="Add Record", font=("Helvetica",20)).pack(pady=10)
+    
+    ctk.CTkLabel(
+        main_frame,
+        text="Add Record",
+        font=("Helvetica", 20)
+    ).pack(pady=60)
+
     frm = ctk.CTkFrame(main_frame)
     frm.pack(pady=10)
 
-    ctk.CTkLabel(frm, text="Country ID:").grid(row=0, column=0, padx=8, pady=6)
-    ent_cid = ctk.CTkEntry(frm, width=200); ent_cid.grid(row=0, column=1)
-    ctk.CTkLabel(frm, text="Year:").grid(row=1, column=0, padx=8, pady=6)
-    ent_year = ctk.CTkEntry(frm, width=200); ent_year.grid(row=1, column=1)
-    ctk.CTkLabel(frm, text="People Without:").grid(row=2, column=0, padx=8, pady=6)
-    ent_pwe = ctk.CTkEntry(frm, width=200); ent_pwe.grid(row=2, column=1)
+    ctk.CTkLabel(frm, text="Country Name:").grid(row=0, column=0, padx=8, pady=6, sticky="e")
+    ent_cid = ctk.CTkEntry(frm, width=100)
+    ent_cid.grid(row=0, column=1)
+
+    ctk.CTkLabel(frm, text="Year:").grid(row=1, column=0, padx=8, pady=6, sticky="e")
+    ent_year = ctk.CTkEntry(frm, width=100)
+    ent_year.grid(row=1, column=1)
+
+    ctk.CTkLabel(frm, text="People Without:").grid(row=2, column=0, padx=8, pady=6, sticky="e")
+    ent_pwe = ctk.CTkEntry(frm, width=100)
+    ent_pwe.grid(row=2, column=1)
+
+    ctk.CTkLabel(frm, text="People With:").grid(row=3, column=0, padx=8, pady=6, sticky="e")
+    ent_p = ctk.CTkEntry(frm, width=100)
+    ent_p.grid(row=3, column=1)
 
     def submit():
         try:
-            backend.add_electricity_record(int(ent_cid.get()), int(ent_year.get()), int(ent_pwe.get()))
-            messagebox.showinfo("Success","Record added")
+            backend.add_electricity_record(
+                int(ent_cid.get()),
+                int(ent_year.get()),
+                int(ent_pwe.get())
+            )
+            messagebox.showinfo("Success", "Record added")
             screen_view()
         except Exception as e:
             messagebox.showerror("Error", str(e))
-
-    ctk.CTkButton(main_frame, text="Submit", command=submit).pack(pady=8)
+    
+    # frame for submit button
+    ctk.CTkButton(frm, text="Submit", command=submit, height=30).grid(row=4, column=0, columnspan=2, pady=(12, 20))
 
 def screen_delete():
     safe_clear(main_frame)
-    ctk.CTkLabel(main_frame, text="Delete Record", font=("Helvetica",20)).pack(pady=10)
-    frm = ctk.CTkFrame(main_frame); frm.pack(pady=10)
+
+    ctk.CTkLabel(main_frame, text="Delete Record", font=("Helvetica", 20)).pack(pady=60)
+    frm = ctk.CTkFrame(main_frame)
+    frm.pack(pady=10)
+
     ctk.CTkLabel(frm, text="Record ID:").grid(row=0, column=0, padx=8, pady=6)
-    ent_id = ctk.CTkEntry(frm, width=200); ent_id.grid(row=0, column=1)
+    ent_id = ctk.CTkEntry(frm, width=50)
+    ent_id.grid(row=0, column=1)
+
     def do_del():
         try:
             backend.delete_electricity_record(int(ent_id.get()))
@@ -182,7 +212,8 @@ def screen_delete():
             screen_view()
         except Exception as e:
             messagebox.showerror("Error", str(e))
-    ctk.CTkButton(main_frame, text="Delete", command=do_del).pack(pady=8)
+
+    ctk.CTkButton(frm, text="Delete", command=do_del, width=80).grid(row=1, column=0, columnspan=2, pady=(12, 20))
 
 def screen_queries():
     safe_clear(main_frame)
@@ -251,10 +282,10 @@ def add_nav_button(text, cmd, y, icon=None):
         btn = ctk.CTkButton(sidebar, text=text, width=200, height=50, anchor="w", command=cmd)
     btn.place(x=10, y=y)
 
-add_nav_button("View Records", screen_view, 120, icons.get("view"))
-add_nav_button("Add Record", screen_add, 190, icons.get("add"))
-add_nav_button("Delete Record", screen_delete, 260, icons.get("delete"))
-add_nav_button("Queries", screen_queries, 330, icons.get("query"))
+add_nav_button("View Records", screen_view, 5, icons.get("view"))
+add_nav_button("Add Record", screen_add, 60, icons.get("add"))
+add_nav_button("Delete Record", screen_delete, 115, icons.get("delete"))
+add_nav_button("Queries", screen_queries, 170, icons.get("query"))
 
 # start with view
 screen_view()
