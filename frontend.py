@@ -179,17 +179,31 @@ def screen_add():
     ent_p = ctk.CTkEntry(frm, width=100)
     ent_p.grid(row=3, column=1)
 
+    msg_frame = ctk.CTkFrame(main_frame)
+    msg_frame.pack(pady=5)
+    status = ctk.CTkLabel(msg_frame, text="", font=("Helvetica", 14))
+    status.pack()
+
     def submit():
         try:
+            country_name = ent_cid.get().strip()
+            year = int(ent_year.get())
+            people_without = int(ent_pwe.get())
+
+            p_with_text = ent_p.get().strip()
+            people_with = int(p_with_text) if p_with_text else None
+            country_id = backend.get_or_create_country_id(country_name)
+
             backend.add_electricity_record(
-                int(ent_cid.get()),
-                int(ent_year.get()),
-                int(ent_pwe.get())
+                country_id,
+                year,
+                people_without,
+                people_with
             )
-            messagebox.showinfo("Success", "Record added")
-            screen_view()
-        except Exception as e:
-            messagebox.showerror("Error", str(e))
+            status.configure(text="Record added")
+
+        except Exception:
+            status.configure(text="Please fill all information")
     
     # frame for submit button
     ctk.CTkButton(frm, text="Submit", command=submit, height=30).grid(row=4, column=0, columnspan=2, pady=(12, 20))
@@ -205,13 +219,22 @@ def screen_delete():
     ent_id = ctk.CTkEntry(frm, width=50)
     ent_id.grid(row=0, column=1)
 
+    msg_frame = ctk.CTkFrame(main_frame)
+    msg_frame.pack(pady=5)
+    status = ctk.CTkLabel(msg_frame, text="", font=("Helvetica", 14))
+    status.pack()
+
     def do_del():
         try:
-            backend.delete_electricity_record(int(ent_id.get()))
-            messagebox.showinfo("Deleted","Record removed")
-            screen_view()
-        except Exception as e:
-            messagebox.showerror("Error", str(e))
+            id = int(ent_id.get())
+        except ValueError:
+            status.configure(text='Invalid ID')
+            return
+        deleted = backend.delete_electricity_record(id)
+        if deleted > 0:
+            status.configure(text="Deleted!")
+        else:
+            status.configure(text="Record not Found!")
 
     ctk.CTkButton(frm, text="Delete", command=do_del, width=80).grid(row=1, column=0, columnspan=2, pady=(12, 20))
 
@@ -282,10 +305,10 @@ def add_nav_button(text, cmd, y, icon=None):
         btn = ctk.CTkButton(sidebar, text=text, width=200, height=50, anchor="w", command=cmd)
     btn.place(x=10, y=y)
 
-add_nav_button("View Records", screen_view, 5, icons.get("view"))
-add_nav_button("Add Record", screen_add, 60, icons.get("add"))
-add_nav_button("Delete Record", screen_delete, 115, icons.get("delete"))
-add_nav_button("Queries", screen_queries, 170, icons.get("query"))
+add_nav_button("View Records", screen_view, 10, icons.get("view"))
+add_nav_button("Add Record", screen_add, 65, icons.get("add"))
+add_nav_button("Delete Record", screen_delete, 120, icons.get("delete"))
+add_nav_button("Queries", screen_queries, 175, icons.get("query"))
 
 # start with view
 screen_view()

@@ -10,6 +10,23 @@ db_designer.init_db()
 def add_country(name, region=None):
     db_designer.add_country(name, region)
 
+def get_or_create_country_id(name, region=None):
+    name = (name or "").strip()
+    if not name:
+        raise ValueError("Country name is required")
+
+    rows = get_countries()
+    for row in rows:
+        if str(row[1]).lower() == name.lower():
+            return row[0]
+
+    add_country(name, region)
+
+    rows = get_countries()
+    for row in rows:
+        if str(row[1]).lower() == name.lower():
+            return row[0]
+
 def get_countries():
     return db_designer.get_countries()
 
@@ -23,7 +40,7 @@ def update_electricity_record(record_id, pwe=None, pwe_with=None):
     db_designer.update_record(record_id, pwe, pwe_with)
 
 def delete_electricity_record(record_id):
-    db_designer.delete_record(record_id)
+    return db_designer.delete_record(record_id)
 
 # Analytical queries (log then run)
 def _log(name, params=""):
@@ -45,6 +62,9 @@ def _log(name, params=""):
             pass
     conn.commit()
     conn.close()
+
+
+
 
 def query_high_unserved(threshold):
     _log("high_unserved", threshold)

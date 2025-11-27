@@ -210,7 +210,7 @@ def add_record(country_id, year, pwe, pwith=None):
 
     year_col = next((c for c in ecols if c.lower() == "year"), "year")
     pwe_col = next((c for c in ecols if "without" in c.lower()), None)
-    pwith_col = next((c for c in ecols if "with" in c.lower()), None)
+    pwith_col = next((c for c in ecols if "with" in c.lower() and "without" not in c.lower()), None)
 
     if pwith_col:
         cur.execute(
@@ -245,11 +245,10 @@ def get_records(limit=None):
         conn.close()
         return []
 
-    # detect columns
     record_id = next((c for c in ecols if "record" in c.lower()), next((c for c in ecols if "id" in c.lower()), ecols[0]))
     year_col = next((c for c in ecols if c.lower() == "year"), "year")
     pwe_col = next((c for c in ecols if "without" in c.lower()), None)
-    pwith_col = next((c for c in ecols if "with" in c.lower()), None)
+    pwith_col = next((c for c in ecols if "with" in c.lower() and "without" not in c.lower()), None)
     country_fk = next((c for c in ecols if "country" in c.lower()), "country_id")
 
     cname = next((c for c in ccols if "name" in c.lower()), "country_name")
@@ -282,14 +281,9 @@ def get_records(limit=None):
 def delete_record(record_id):
     conn = _connect()
     cur = conn.cursor()
-    schema = _detect_schema()
-
-    etbl = schema["elec_table"]
-    ecols = schema["elec_cols"]
-
-    id_col = next((c for c in ecols if "record" in c.lower()), next((c for c in ecols if "id" in c.lower()), ecols[0]))
-
-    cur.execute(f"DELETE FROM {etbl} WHERE {id_col}=?", (record_id,))
+    cur.execute("DELETE FROM ElectricityAccess WHERE record_id = ?", (record_id,))
+    deleted = cur.rowcount
     conn.commit()
     conn.close()
+    return deleted
 
