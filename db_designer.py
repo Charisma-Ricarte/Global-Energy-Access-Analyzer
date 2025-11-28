@@ -275,6 +275,64 @@ def get_records(limit=None):
 
 
 # ======================================================================
+# UPDATE RECORD
+# ======================================================================
+
+def update_record(record_id, country_id, year, pwe, pwith):
+    conn = _connect()
+    cur = conn.cursor()
+    schema = _detect_schema()
+
+    etbl = schema["elec_table"]
+    ecols = schema["elec_cols"]
+
+    if not etbl:
+        conn.close()
+        return 0
+
+    record_id_col = next(
+        (c for c in ecols if "record" in c.lower()),
+        next((c for c in ecols if "id" in c.lower()), ecols[0])
+    )
+    year_col = next((c for c in ecols if c.lower() == "year"), "year")
+    pwe_col = next((c for c in ecols if "without" in c.lower()), None)
+    pwith_col = next((c for c in ecols if "with" in c.lower() and "without" not in c.lower()), None)
+    country_fk = next((c for c in ecols if "country" in c.lower()), "country_id")
+
+    if not pwe_col:
+        conn.close()
+        return 0
+
+    if pwith_col:
+        sql = f"""
+            UPDATE {etbl}
+            SET {country_fk} = ?,
+                {year_col} = ?,
+                {pwe_col} = ?,
+                {pwith_col} = ?
+            WHERE {record_id_col} = ?
+        """
+        params = (country_id, year, pwe, pwith, record_id)
+    else:
+        sql = f"""
+            UPDATE {etbl}
+            SET {country_fk} = ?,
+                {year_col} = ?,
+                {pwe_col} = ?
+            WHERE {record_id_col} = ?
+        """
+        params = (country_id, year, pwe, record_id)
+
+    cur.execute(sql, params)
+    updated = cur.rowcount
+    conn.commit()
+    conn.close()
+    return updated
+
+
+
+
+# ======================================================================
 # DELETE RECORD
 # ======================================================================
 

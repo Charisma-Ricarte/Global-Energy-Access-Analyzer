@@ -30,14 +30,14 @@ def get_or_create_country_id(name, region=None):
 def get_countries():
     return db_designer.get_countries()
 
-def add_electricity_record(country_id, year, people_without, people_with=None):
+def add_electricity_record(country_id, year, people_without, people_with):
     db_designer.add_record(country_id, year, people_without, people_with)
 
 def get_electricity_records(limit=None):
     return db_designer.get_records(limit)
 
-def update_electricity_record(record_id, pwe=None, pwe_with=None):
-    db_designer.update_record(record_id, pwe, pwe_with)
+def update_electricity_record(record_id, country_id, year, pwe, pwe_with):
+    return db_designer.update_record(record_id, country_id, year, pwe, pwe_with)
 
 def delete_electricity_record(record_id):
     return db_designer.delete_record(record_id)

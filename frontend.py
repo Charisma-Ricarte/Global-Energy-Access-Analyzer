@@ -208,6 +208,77 @@ def screen_add():
     # frame for submit button
     ctk.CTkButton(frm, text="Submit", command=submit, height=30).grid(row=4, column=0, columnspan=2, pady=(12, 20))
 
+def screen_update():
+    safe_clear(main_frame)
+
+    ctk.CTkLabel(
+        main_frame,
+        text="Update Record",
+        font=("Helvetica", 20)
+    ).pack(pady=60)
+
+    frm = ctk.CTkFrame(main_frame)
+    frm.pack(pady=10)
+
+    ctk.CTkLabel(frm, text="Record ID:").grid(row=0, column=0, padx=8, pady=6, sticky="e")
+    ent_id = ctk.CTkEntry(frm, width=100)
+    ent_id.grid(row=0, column=1)
+
+    ctk.CTkLabel(frm, text="Country Name:").grid(row=1, column=0, padx=8, pady=6, sticky="e")
+    ent_cid = ctk.CTkEntry(frm, width=100)
+    ent_cid.grid(row=1, column=1)
+
+    ctk.CTkLabel(frm, text="Year:").grid(row=2, column=0, padx=8, pady=6, sticky="e")
+    ent_year = ctk.CTkEntry(frm, width=100)
+    ent_year.grid(row=2, column=1)
+
+    ctk.CTkLabel(frm, text="People Without:").grid(row=3, column=0, padx=8, pady=6, sticky="e")
+    ent_pwe = ctk.CTkEntry(frm, width=100)
+    ent_pwe.grid(row=3, column=1)
+
+    ctk.CTkLabel(frm, text="People With:").grid(row=4, column=0, padx=8, pady=6, sticky="e")
+    ent_p = ctk.CTkEntry(frm, width=100)
+    ent_p.grid(row=4, column=1)
+
+    msg_frame = ctk.CTkFrame(main_frame)
+    msg_frame.pack(pady=5)
+    status = ctk.CTkLabel(msg_frame, text="", font=("Helvetica", 14))
+    status.pack()
+
+    def update():
+        try:
+            id = int(ent_id.get())
+        except ValueError:
+            status.configure(text='Invalid ID')
+            return
+        country_name = ent_cid.get().strip()
+        if not country_name:
+            status.configure(text="Country required")
+            return
+        try:
+            year = int(ent_year.get())
+        except ValueError:
+            status.configure(text="Invalid year")
+            return
+        try:
+            people_with = int(ent_pwe.get())
+        except ValueError:
+            status.configure(text="Invalid number of people")
+            return
+        try:
+            people_witho = int(ent_p.get())
+        except ValueError:
+            status.configure(text="Invalid number of people")
+            return
+        country_id = backend.get_or_create_country_id(country_name)
+        updated = backend.update_electricity_record(id, country_name, year, people_witho, people_with)
+        if updated > 0:
+            status.configure(text="Updated!")
+        else:
+            status.configure(text="Record not Found!")
+
+    ctk.CTkButton(frm, text="Update", command=update, width=80).grid(row=6, column=0, columnspan=2, pady=(12, 20))
+
 def screen_delete():
     safe_clear(main_frame)
 
@@ -307,8 +378,9 @@ def add_nav_button(text, cmd, y, icon=None):
 
 add_nav_button("View Records", screen_view, 10, icons.get("view"))
 add_nav_button("Add Record", screen_add, 65, icons.get("add"))
-add_nav_button("Delete Record", screen_delete, 120, icons.get("delete"))
-add_nav_button("Queries", screen_queries, 175, icons.get("query"))
+add_nav_button("Update Record", screen_update, 120, icons.get("add"))
+add_nav_button("Delete Record", screen_delete, 175, icons.get("delete"))
+add_nav_button("Queries", screen_queries, 230, icons.get("query"))
 
 # start with view
 screen_view()
