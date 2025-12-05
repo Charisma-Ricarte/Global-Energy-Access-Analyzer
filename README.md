@@ -2,7 +2,9 @@
 ## Installation Instructions
   * 1.Clone or download the repo  
     - git clone https://github.com/Charisma-Ricarte/Global-Energy-Access-Analyzer  
-    - cd Global-Energy-Access-Analyzer  
+    - cd Global-Energy-Access-Analyzer
+  * 2.Switch to correct branch
+    - git checkout Integration-Update 
   * 2.Create a virtual environment (recomanded)  
     - python -m venv venv  
     - source venv/bin/activate  # On Windows: venv\Scripts\activate  
@@ -18,6 +20,7 @@
 
 
   
+
 
 
 
