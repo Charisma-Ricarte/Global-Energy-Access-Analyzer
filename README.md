@@ -10,7 +10,7 @@
     - source venv/bin/activate  # On Windows: venv\Scripts\activate  
   * 3.Install required Python packages  
     - pip install -r requirements.txt  
-  * 4.Initialize the Database (I will try to upload the .db but if it is not in the repo be prepared this will take a while)  
+  * 4.Initialize the Database (be prepared, this will take a while)  
     - python data_loader.py  
   * 5.Run the frontend  
     - python frontend.py  
@@ -20,6 +20,7 @@
 
 
   
+
 
 
 
